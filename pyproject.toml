@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "botx-fsm"
-version = "0.1.0"
+version = "0.1.5"
 description = "FSM middleware for using with pybotx"
 authors = ["Nik Sidnev <sidnev.nick@gmail.com>"]
 
 
 [tool.poetry.dependencies]
 python = "^3.7"
-botx = ">=0.17.0, <0.20.0"
+botx = ">=0.17.0, <0.21.0"
 aioredis = "^1.3.1"
 async_lru = "^1.0.2"
 
