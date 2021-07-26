@@ -137,6 +137,14 @@ typing-extensions = {version = ">=3.7.4,<4.0.0", markers = "python_version < \"3
 tests = ["aiofiles (>=0.6.0,<0.7.0)", "molten (>=1.0.1,<2.0.0)", "starlette (>=0.13.2,<0.14.0)"]
 
 [[package]]
+name = "cachetools"
+version = "4.2.2"
+description = "Extensible memoizing collections and decorators"
+category = "main"
+optional = false
+python-versions = "~=3.5"
+
+[[package]]
 name = "certifi"
 version = "2020.12.5"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -864,7 +872,7 @@ docutils = ">=0.11,<1.0"
 
 [[package]]
 name = "rfc3986"
-version = "1.4.0"
+version = "1.5.0"
 description = "Validating URI References per RFC 3986"
 category = "main"
 optional = false
@@ -1040,7 +1048,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f392c60c0543aa055a7d696e14f63b4b2ef4f335a935e1476b2a7bf09769bf9b"
+content-hash = "adaa2e2e5bbb310d81fab0c87e57343e8ee8d63510dbc6c5ad6e19e75cce2fc9"
 
 [metadata.files]
 aioredis = [
@@ -1088,6 +1096,10 @@ black = [
 botx = [
     {file = "botx-0.17.1-py3-none-any.whl", hash = "sha256:d20405aaa849a93fc908bd4b0856efb65dc864a2139555e481a276c00cc106c6"},
     {file = "botx-0.17.1.tar.gz", hash = "sha256:4e8cc4a867f5d9d18e3d6864e8e2368c27fe41188630030b7d600b69fdfd63d7"},
+]
+cachetools = [
+    {file = "cachetools-4.2.2-py3-none-any.whl", hash = "sha256:2cc0b89715337ab6dbba85b5b50effe2b0c74e035d83ee8ed637cf52f12ae001"},
+    {file = "cachetools-4.2.2.tar.gz", hash = "sha256:61b5ed1e22a0924aed1d23b478f37e8d52549ff8a961de2909c69bf950020cff"},
 ]
 certifi = [
     {file = "certifi-2020.12.5-py2.py3-none-any.whl", hash = "sha256:719a74fb9e33b9bd44cc7f3a8d94bc35e4049deebe19ba7d8e108280cfd59830"},
@@ -1519,8 +1531,8 @@ restructuredtext-lint = [
     {file = "restructuredtext_lint-1.3.2.tar.gz", hash = "sha256:d3b10a1fe2ecac537e51ae6d151b223b78de9fafdd50e5eb6b08c243df173c80"},
 ]
 rfc3986 = [
-    {file = "rfc3986-1.4.0-py2.py3-none-any.whl", hash = "sha256:af9147e9aceda37c91a05f4deb128d4b4b49d6b199775fd2d2927768abdc8f50"},
-    {file = "rfc3986-1.4.0.tar.gz", hash = "sha256:112398da31a3344dc25dbf477d8df6cb34f9278a94fee2625d89e4514be8bb9d"},
+    {file = "rfc3986-1.5.0-py2.py3-none-any.whl", hash = "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"},
+    {file = "rfc3986-1.5.0.tar.gz", hash = "sha256:270aaf10d87d0d4e095063c65bf3ddbc6ee3d0b226328ce21e036f946e421835"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
