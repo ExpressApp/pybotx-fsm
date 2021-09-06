@@ -10,8 +10,8 @@ BotLifespanEvent = Callable[[], Awaitable[None]]
 
 
 class Bot(BaseBot):
-    startup_events: Sequence[BotLifespanEvent] = []
-    shutdown_events: Sequence[BotLifespanEvent] = []
+    startup_events: Sequence[BotLifespanEvent] = []  # type: ignore
+    shutdown_events: Sequence[BotLifespanEvent] = []  # type: ignore
 
     async def start(self) -> None:
         for event in self.startup_events:
@@ -31,8 +31,8 @@ bot.add_middleware(
     FSMMiddleware, storage=redis_storage, fsm_instances=[process1.fsm, process2.fsm],
 )
 
-bot.startup_events = [redis_storage.init]
-bot.shutdown_events = [redis_storage.close]
+bot.startup_events = [redis_storage.init]  # type: ignore
+bot.shutdown_events = [redis_storage.close]  # type: ignore
 
 bot.include_collector(process1.collector)
 bot.include_collector(process2.collector)

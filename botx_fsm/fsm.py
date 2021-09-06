@@ -12,7 +12,7 @@ from botx_fsm.typing import EnumT
 
 
 def _check_state_is_valid(
-        target_state: Union[EnumT, FSMStateMarker], states: Type[EnumT],
+    target_state: Union[EnumT, FSMStateMarker], states: Type[EnumT],
 ) -> None:
     error = RuntimeError(
         "state should be on of {0} enum states or unset object, got {1}".format(
@@ -33,27 +33,27 @@ class FSM(Generic[EnumT]):
     storage: BaseStorage[EnumT]
 
     def __init__(
-            self,
-            states: Type[EnumT],
-            dependencies: Optional[Sequence[Depends]] = None,
-            dependency_overrides_provider: Any = None,
+        self,
+        states: Type[EnumT],
+        dependencies: Optional[Sequence[Depends]] = None,
+        dependency_overrides_provider: Any = None,
     ) -> None:
         self.states = states
-        self.collector = Collector(
+        self.collector = Collector(  # type: ignore
             dependencies=dependencies,
             dependency_overrides_provider=dependency_overrides_provider,
         )
         self.transitions: Dict[EnumT, Transition] = {}
 
     def on(  # noqa: WPS211
-            self,
-            trigger_state: EnumT,
-            on_success: Union[EnumT, FSMStateMarker] = undefined,
-            on_success_handler: Optional[Callable] = None,
-            on_failure: Union[EnumT, FSMStateMarker] = undefined,
-            on_failure_handler: Optional[Callable] = None,
-            dependencies: Optional[Sequence[Depends]] = None,
-            dependency_overrides_provider: Any = None,
+        self,
+        trigger_state: EnumT,
+        on_success: Union[EnumT, FSMStateMarker] = undefined,
+        on_success_handler: Optional[Callable] = None,
+        on_failure: Union[EnumT, FSMStateMarker] = undefined,
+        on_failure_handler: Optional[Callable] = None,
+        dependencies: Optional[Sequence[Depends]] = None,
+        dependency_overrides_provider: Any = None,
     ) -> Callable:
         def decorator(command_handler: Callable) -> Callable:
             states_name = self.states.__name__
@@ -83,8 +83,12 @@ class FSM(Generic[EnumT]):
                 handler_name,
                 on_success,
                 on_failure,
-                get_executor(get_dependant(call=on_success_handler)) if on_success_handler else None,
-                get_executor(get_dependant(call=on_failure_handler)) if on_failure_handler else None,
+                get_executor(get_dependant(call=on_success_handler))
+                if on_success_handler
+                else None,
+                get_executor(get_dependant(call=on_failure_handler))
+                if on_failure_handler
+                else None,
             )
 
             return command_handler
@@ -94,8 +98,9 @@ class FSM(Generic[EnumT]):
     async def get_state(self, key: Union[Key, Message]) -> StateInStorage:
         return await self.storage.get_state(_convert_to_key(key))
 
-    async def change_state(self, key: Union[Key, Message], new_state: EnumT,
-                           **kwargs: Any) -> None:
+    async def change_state(
+        self, key: Union[Key, Message], new_state: EnumT, **kwargs: Any,
+    ) -> None:
         if new_state not in self.states:
             raise RuntimeError(
                 "new state should be one of states from FSM initialization",

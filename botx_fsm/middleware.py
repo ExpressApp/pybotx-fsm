@@ -13,8 +13,7 @@ from botx_fsm.storages.base import BaseStorage, StateInStorage
 
 class FSMMiddleware(BaseMiddleware):
     def __init__(
-            self, executor: Executor, *, storage: BaseStorage,
-            fsm_instances: Sequence[FSM],
+        self, executor: Executor, *, storage: BaseStorage, fsm_instances: Sequence[FSM],
     ) -> None:
         super().__init__(executor)
         self.fsm_instances = tuple(fsm_instances)
@@ -35,7 +34,7 @@ class FSMMiddleware(BaseMiddleware):
         try:
             current_state = await self._storage.get_state(Key.from_message(message))
         except RuntimeError:
-            current_state = unset
+            current_state = unset  # type: ignore
 
         if current_state is unset:
             await callable_to_coroutine(call_next, message)
@@ -51,7 +50,7 @@ class FSMMiddleware(BaseMiddleware):
         )
 
     async def _process_fsm_state(
-            self, current_state: StateInStorage, fsm: FSM, message: Message,
+        self, current_state: StateInStorage, fsm: FSM, message: Message,
     ) -> None:
         key = Key.from_message(message)
         state_transitions = fsm.transitions[current_state.state]

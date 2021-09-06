@@ -36,9 +36,10 @@ def fsm_bot(bot: Bot, redis_storage: RedisStorage, fsm: FSM[EnumForTests]) -> Bo
 
 @m.asyncio
 async def test_state_will_be_unset_if_flow_error_called_with_clear(
-    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage
+    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage, bot_id
 ) -> None:
     builder = MessageBuilder()
+    builder.bot_id = bot_id
     message = builder.message
     key = Key.from_message(Message.from_dict(message.dict(), fsm_bot))
 

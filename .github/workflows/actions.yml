@@ -1,0 +1,55 @@
+name: Python application
+on: push
+jobs:
+
+  test:
+    name: Test
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    services:
+      redis:
+        image: redis:6
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Setup
+        uses: ExpressApp/github-actions-poetry@v0.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          poetry-version: "1.1.6"
+
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          ./scripts/test --cov-report=xml
+        env:
+          REDIS_DSN: redis://localhost/0
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          files: ./coverage.xml
+          flags: unittests
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Setup
+        uses: ExpressApp/github-actions-poetry@v0.1
+
+      - name: Run lint
+        run: |
+          source .venv/bin/activate
+          ./scripts/lint

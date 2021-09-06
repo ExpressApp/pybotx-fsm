@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from typing import Generic, NewType, Union, Optional, Callable
+from typing import Callable, Generic, NewType, Optional, Union
 from uuid import UUID
 
 from botx import Message

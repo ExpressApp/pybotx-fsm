@@ -41,12 +41,13 @@ def fsm_bot(bot: Bot, redis_storage: RedisStorage, fsm: FSM[EnumForTests]) -> Bo
 
 @m.asyncio
 async def test_changing_state_on_successful_execution(
-    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage
+    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage, bot_id
 ) -> None:
     builder = MessageBuilder()
+    builder.bot_id = bot_id
     message = builder.message
     key = Key.from_message(Message.from_dict(message.dict(), fsm_bot))
 
     await client.send_command(message)  # trigger initial state1
     await client.send_command(message)  # change to state2
-    assert await redis_storage.get_state(key) == EnumForTests.state2
+    assert (await redis_storage.get_state(key)).state == EnumForTests.state2

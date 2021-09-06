@@ -1,5 +1,7 @@
 # pybotx-fsm
 
+[![codecov](https://codecov.io/gh/ExpressApp/pybotx-fsm/branch/master/graph/badge.svg?token=JWT9JWU2Z4)](https://codecov.io/gh/ExpressApp/pybotx-fsm)
+
 Конечный автомат (Finite state machine) для ботов на базе библиотеки
 [pybotx](https://github.com/ExpressApp/pybotx).
 

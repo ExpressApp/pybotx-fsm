@@ -2,10 +2,13 @@ from enum import Enum, auto
 
 import pytest
 from botx import Bot, Message, MessageBuilder, TestClient
-from pytest import mark as m
 
 from botx_fsm import FSM, FSMMiddleware, Key
 from botx_fsm.storages.redis import RedisStorage
+
+
+class CustomException(Exception):
+    pass
 
 
 class EnumForTests(Enum):
@@ -28,7 +31,7 @@ def fsm() -> FSM[EnumForTests]:
 
     @fsm.on(EnumForTests.state3, on_failure=EnumForTests.state2)
     async def process_state3() -> None:
-        raise Exception
+        raise CustomException
 
     return fsm
 
@@ -36,6 +39,7 @@ def fsm() -> FSM[EnumForTests]:
 @pytest.fixture()
 def fsm_bot(bot: Bot, redis_storage: RedisStorage, fsm: FSM[EnumForTests]) -> Bot:
     bot.add_middleware(FSMMiddleware, storage=redis_storage, fsm_instances=[fsm])
+    bot.add_exception_handler(CustomException, lambda _: None)
 
     @bot.default
     async def default_handler(message: Message) -> None:
@@ -44,18 +48,19 @@ def fsm_bot(bot: Bot, redis_storage: RedisStorage, fsm: FSM[EnumForTests]) -> Bo
     return bot
 
 
-@m.asyncio
+@pytest.mark.asyncio
 async def test_changing_state_on_successful_execution(
-    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage
+    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage, bot_id
 ) -> None:
     builder = MessageBuilder()
+    builder.bot_id = bot_id
     message = builder.message
     key = Key.from_message(Message.from_dict(message.dict(), fsm_bot))
 
     await client.send_command(message)  # trigger initial state1
     await client.send_command(message)  # change to state2
     await client.send_command(message)  # change to state3
-    assert await redis_storage.get_state(key) == EnumForTests.state3
+    assert (await redis_storage.get_state(key)).state == EnumForTests.state3
 
     await client.send_command(message)  # change to state2 from failure
-    assert await redis_storage.get_state(key) == EnumForTests.state2
+    assert (await redis_storage.get_state(key)).state == EnumForTests.state2

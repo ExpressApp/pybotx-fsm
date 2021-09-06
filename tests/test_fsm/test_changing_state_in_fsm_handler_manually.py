@@ -2,7 +2,6 @@ from enum import Enum, auto
 
 import pytest
 from botx import Bot, Message, MessageBuilder, TestClient
-from pytest import mark as m
 
 from botx_fsm import FSM, FSMMiddleware, Key, unset
 from botx_fsm.storages.redis import RedisStorage
@@ -39,37 +38,41 @@ def fsm_bot(bot: Bot, redis_storage: RedisStorage, fsm: FSM[EnumForTests]) -> Bo
     return bot
 
 
-@m.asyncio
+@pytest.mark.asyncio
 async def test_changing_state_on_successful_execution(
     fsm_bot: Bot,
     fsm: FSM[EnumForTests],
     client: TestClient,
     redis_storage: RedisStorage,
+    bot_id,
 ) -> None:
     builder = MessageBuilder()
+    builder.bot_id = bot_id
     message = builder.message
     handler_message = Message.from_dict(message.dict(), fsm_bot)
 
     await client.send_command(message)  # trigger initial state1
     await client.send_command(message)  # change to state2 manually
-    assert await fsm.get_state(handler_message) == EnumForTests.state2
+    assert (await fsm.get_state(handler_message)).state == EnumForTests.state2
 
     await client.send_command(message)  # unset state
     assert await fsm.get_state(handler_message) == unset
 
 
-@m.asyncio
+@pytest.mark.asyncio
 async def test_fsm_accepts_key_as_argument(
     fsm_bot: Bot,
     fsm: FSM[EnumForTests],
     client: TestClient,
     redis_storage: RedisStorage,
+    bot_id,
 ) -> None:
     builder = MessageBuilder()
+    builder.bot_id = bot_id
     message = builder.message
     handler_message = Message.from_dict(message.dict(), fsm_bot)
     key = Key.from_message(handler_message)
 
     await client.send_command(message)  # trigger initial state1
     await client.send_command(message)  # change to state2 manually
-    assert await fsm.get_state(key) == EnumForTests.state2
+    assert (await fsm.get_state(key)).state == EnumForTests.state2

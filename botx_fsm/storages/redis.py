@@ -3,11 +3,11 @@
 
 import pickle  # noqa: S403
 from enum import Enum
-from typing import Union, Optional, Any
+from typing import Any, Optional, Union
 
 from aioredis import Redis, create_redis_pool
-
 from botx import Bot
+
 from botx_fsm.markers import FSMStateMarker, unset
 from botx_fsm.models import Key
 from botx_fsm.storages.base import BaseStorage, StateInStorage
@@ -22,8 +22,12 @@ def _build_redis_key(key: str, prefix: str = REDIS_PREFIX) -> str:
 class RedisStorage(BaseStorage):
     redis_pool: Redis
 
-    def __init__(self, redis_dsn: str, prefix: str = REDIS_PREFIX,
-                 expire_time: Optional[int] = None) -> None:
+    def __init__(
+        self,
+        redis_dsn: str,
+        prefix: str = REDIS_PREFIX,
+        expire_time: Optional[int] = None,
+    ) -> None:
         self.redis_dsn = redis_dsn
         self._prefix = prefix
         self._expire_time = expire_time
@@ -39,7 +43,7 @@ class RedisStorage(BaseStorage):
         redis_key = _build_redis_key(key.to_json(), self._prefix)
         saved_value = await self.redis_pool.get(redis_key)
         if saved_value is None:
-            return unset
+            return unset  # type: ignore
 
         restored_value = pickle.loads(saved_value)  # noqa: S301
         if not isinstance(restored_value, StateInStorage):
@@ -47,13 +51,16 @@ class RedisStorage(BaseStorage):
 
         return restored_value
 
-    async def change_state(self, key: Key, state: Union[Enum, FSMStateMarker],
-                           **kwargs: Any) -> None:
+    async def change_state(
+        self, key: Key, state: Union[Enum, FSMStateMarker], **kwargs: Any,
+    ) -> None:
         redis_key = _build_redis_key(key.to_json(), self._prefix)
         if state is unset:
             await self.redis_pool.delete(redis_key)
             return
 
-        await self.redis_pool.set(redis_key, pickle.dumps(
-            StateInStorage(state=state, kwargs=kwargs)),
-                                  expire=self._expire_time)
+        await self.redis_pool.set(
+            redis_key,
+            pickle.dumps(StateInStorage(state=state, kwargs=kwargs)),
+            expire=self._expire_time,
+        )
