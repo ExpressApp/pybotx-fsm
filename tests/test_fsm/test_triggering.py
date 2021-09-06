@@ -36,11 +36,12 @@ def fsm_bot(bot: Bot, redis_storage: RedisStorage, fsm: FSM[EnumForTests]) -> Bo
 
 @m.asyncio
 async def test_triggering_fsm(
-    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage
+    fsm_bot: Bot, client: TestClient, redis_storage: RedisStorage, bot_id
 ) -> None:
     builder = MessageBuilder()
+    builder.bot_id = bot_id
     message = builder.message
     key = Key.from_message(Message.from_dict(message.dict(), fsm_bot))
     await client.send_command(message)
 
-    assert await redis_storage.get_state(key) == EnumForTests.state1
+    assert (await redis_storage.get_state(key)).state == EnumForTests.state1

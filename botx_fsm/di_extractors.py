@@ -1,10 +1,10 @@
-from typing import Callable
+from typing import Any, Callable
 
-from botx import Message, Bot
+from botx import Bot, Message
 
 
 def _extractor(key: str) -> Callable[[Message], Bot]:
-    def decorator(message: Message):
+    def decorator(message: Message) -> Any:
         try:
             return getattr(message.state, key)
         except AttributeError:
@@ -14,7 +14,7 @@ def _extractor(key: str) -> Callable[[Message], Bot]:
 
 
 class _StateExtractor:
-    def __getattribute__(self, item: str) -> Callable[[Message], Bot]:
+    def __getattribute__(self, item: str) -> Callable[[Message], Bot]:  # noqa: WPS110
         return _extractor(item)
 
 

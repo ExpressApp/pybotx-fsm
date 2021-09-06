@@ -6,5 +6,10 @@ from botx_fsm.middleware import FSMMiddleware
 from botx_fsm.models import Key
 
 __all__ = (  # noqa: WPS410
-    "FlowError", "FSM", "unset", "FSMMiddleware", "Key", 'StateExtractor'
+    "FlowError",
+    "FSM",
+    "unset",
+    "FSMMiddleware",
+    "Key",
+    "StateExtractor",
 )

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Generic, Union, Any, Dict
+from typing import Any, Dict, Generic, Union
 
 from botx import Bot
+
 from botx_fsm.markers import FSMStateMarker
 from botx_fsm.models import Key
 from botx_fsm.typing import EnumT
@@ -25,6 +26,6 @@ class BaseStorage(Generic[EnumT]):
         raise NotImplementedError
 
     async def change_state(
-            self, key: Key, state: Union[EnumT, FSMStateMarker], **kwargs: Any
+        self, key: Key, state: Union[EnumT, FSMStateMarker], **kwargs: Any,
     ) -> None:
         raise NotImplementedError

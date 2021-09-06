@@ -1,9 +1,9 @@
-import pickle
+import pickle  # noqa: S403
 from datetime import timedelta
 from enum import Enum
 from typing import Any, Union
 
-from cachetools import TTLCache
+from cachetools import TTLCache  # type: ignore
 
 from botx_fsm import Key, unset
 from botx_fsm.markers import FSMStateMarker
@@ -16,13 +16,15 @@ ONE_MB = 1024 * 1024
 class MemoryStorage(BaseStorage):
     storage: TTLCache
 
-    def __init__(self, maxsize: int = ONE_MB, expire_time: int = ONE_WEEK) -> None:
-        self.storage = TTLCache(maxsize=maxsize, ttl=expire_time,)
+    def __init__(
+        self, maxsize: int = ONE_MB, expire_time: int = ONE_WEEK,  # type: ignore
+    ) -> None:
+        self.storage = TTLCache(maxsize=maxsize, ttl=expire_time)
 
     async def get_state(self, key: Key) -> StateInStorage:
         saved_value = self.storage.get(key.to_json())
         if saved_value is None:
-            return unset
+            return unset  # type: ignore
 
         restored_value = pickle.loads(saved_value)  # noqa: S301
         if not isinstance(restored_value, StateInStorage):
@@ -31,13 +33,13 @@ class MemoryStorage(BaseStorage):
         return restored_value
 
     async def change_state(
-        self, key: Key, state: Union[Enum, FSMStateMarker], **kwargs: Any
+        self, key: Key, state: Union[Enum, FSMStateMarker], **kwargs: Any,
     ) -> None:
         memory_key = key.to_json()
         if state is unset:
-            del self.storage[memory_key]
+            del self.storage[memory_key]  # noqa: WPS420
             return
 
         self.storage[memory_key] = pickle.dumps(
-            StateInStorage(state=state, kwargs=kwargs)
+            StateInStorage(state=state, kwargs=kwargs),
         )
