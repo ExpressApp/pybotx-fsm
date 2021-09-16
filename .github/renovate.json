@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "ignorePaths": [
+    ".github/workflows/*"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["botx"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    }
+  ]
+}
