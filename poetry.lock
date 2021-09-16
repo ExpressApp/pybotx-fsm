@@ -138,7 +138,7 @@ d = ["aiohttp (>=3.3.2)", "aiohttp-cors"]
 
 [[package]]
 name = "botx"
-version = "0.23.1"
+version = "0.24.0"
 description = "A little python framework for building bots for eXpress"
 category = "main"
 optional = false
@@ -152,7 +152,7 @@ pydantic = ">=1.0.0,<2.0.0"
 typing-extensions = {version = ">=3.7.4,<4.0.0", markers = "python_version < \"3.8\""}
 
 [package.extras]
-tests = ["aiofiles (>=0.6.0,<0.7.0)", "molten (>=1.0.1,<2.0.0)", "starlette (>=0.13.2,<0.14.0)", "python-multipart (>=0.0.5,<0.0.6)"]
+tests = ["aiofiles (>=0.7.0,<0.8.0)", "molten (>=1.0.1,<2.0.0)", "python-multipart (>=0.0.5,<0.0.6)"]
 
 [[package]]
 name = "cachetools"
@@ -979,7 +979,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7, <3.10"
-content-hash = "72bcc8b566e0428a513a21d3b8cb143ea19e1d53123a522942074cd9ef955285"
+content-hash = "49ec43e7adf1dc83b4b22d326746ffc450ded7d45a0081ce4aa555eea279c413"
 
 [metadata.files]
 aioredis = [
@@ -1029,8 +1029,8 @@ black = [
     {file = "black-19.10b0.tar.gz", hash = "sha256:c2edb73a08e9e0e6f65a0e6af18b059b8b1cdd5bef997d7a0b181df93dc81539"},
 ]
 botx = [
-    {file = "botx-0.23.1-py3-none-any.whl", hash = "sha256:e731760f3891cfa66a60d07ffd5900bcd6668a76a054b4c4e7aa58c84745e0ae"},
-    {file = "botx-0.23.1.tar.gz", hash = "sha256:343a9cd57833d5f3bb206907c83ed830cb967f13e2b5384d6b64c923266a6055"},
+    {file = "botx-0.24.0-py3-none-any.whl", hash = "sha256:1a7901ecbf5fe098ce9aef3a26220b619964e3f08578a10ef863c18f35470b80"},
+    {file = "botx-0.24.0.tar.gz", hash = "sha256:1437ee751063a37597ac467880199e32ac56501ae48ac784e183030ddfa59b6d"},
 ]
 cachetools = [
     {file = "cachetools-4.2.2-py3-none-any.whl", hash = "sha256:2cc0b89715337ab6dbba85b5b50effe2b0c74e035d83ee8ed637cf52f12ae001"},
