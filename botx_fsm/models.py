@@ -50,7 +50,7 @@ class Key:
 
     @classmethod
     def from_message(cls, message: Message) -> "Key":
-        if message.user_huid is None:
+        if message.user_huid is None or message.group_chat_id is None:
             raise RuntimeError(
                 "message should be received from user and contain user_huid",
             )
