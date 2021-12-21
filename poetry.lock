@@ -156,11 +156,11 @@ tests = ["aiofiles (>=0.7.0,<0.8.0)", "molten (>=1.0.1,<2.0.0)", "python-multipa
 
 [[package]]
 name = "cachetools"
-version = "4.2.2"
+version = "5.0.0"
 description = "Extensible memoizing collections and decorators"
 category = "main"
 optional = false
-python-versions = "~=3.5"
+python-versions = "~=3.7"
 
 [[package]]
 name = "certifi"
@@ -992,7 +992,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7, <3.10"
-content-hash = "c1f2f16f9239603b9977175c71d6bed48455ca91926e7368c1d73995abeab833"
+content-hash = "db8cbadf8e3242a6f6e49846ef46b6c27bacec44bebcc62542316e4407a14782"
 
 [metadata.files]
 aioredis = [
@@ -1046,8 +1046,8 @@ botx = [
     {file = "botx-0.28.0.tar.gz", hash = "sha256:a0439d7411210e186fc16aa20f27fc57110ef3f3af9dfe96ad98b5a38da89616"},
 ]
 cachetools = [
-    {file = "cachetools-4.2.2-py3-none-any.whl", hash = "sha256:2cc0b89715337ab6dbba85b5b50effe2b0c74e035d83ee8ed637cf52f12ae001"},
-    {file = "cachetools-4.2.2.tar.gz", hash = "sha256:61b5ed1e22a0924aed1d23b478f37e8d52549ff8a961de2909c69bf950020cff"},
+    {file = "cachetools-5.0.0-py3-none-any.whl", hash = "sha256:8fecd4203a38af17928be7b90689d8083603073622229ca7077b72d8e5a976e4"},
+    {file = "cachetools-5.0.0.tar.gz", hash = "sha256:486471dfa8799eb7ec503a8059e263db000cdda20075ce5e48903087f79d5fd6"},
 ]
 certifi = [
     {file = "certifi-2021.5.30-py2.py3-none-any.whl", hash = "sha256:50b1e4f8446b06f41be7dd6338db18e0990601dce795c2b1686458aa7e8fa7d8"},
