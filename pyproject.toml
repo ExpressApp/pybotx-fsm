@@ -1,0 +1,26 @@
+# https://python-poetry.org/docs/
+
+[tool.poetry]
+name = "botx-fsm"
+version = "0.2.0"
+description = "FSM middleware for using with pybotx"
+authors = []
+
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.11"
+
+botx = { git = "https://github.com/ExpressApp/pybotx", rev = "0d301fd" }
+
+
+[tool.poetry.dev-dependencies]
+add-trailing-comma = "2.2.1"
+autoflake = "1.4.0"
+black = "21.12b0"
+isort = "5.10.1"
+mypy = "0.910.0"
+wemake-python-styleguide = "0.16.0"
+
+[build-system]
+requires = ["poetry>=1.1.12"]
+build-backend = "poetry.masonry.api"

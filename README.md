@@ -23,104 +23,78 @@
 Добавьте эту строку в зависимости проекта в `pyproject.toml`:
 
 ```toml
-botx-fsm = { git = "https://github.com/ExpressApp/pybotx-fsm", rev = "0.1.4" }
+botx-fsm = { git = "https://github.com/ExpressApp/pybotx-fsm", rev = "0.2.0" }
 ```
 
 ## Работа с графом состояний
 
-1. Добавьте экземпляр автомата в мидлваре для того, чтобы бот мог использовать его:
+1. Добавьте экземпляр автомата в мидлвари для того, чтобы бот мог использовать его:
 
-```python
-# bot.py
-
-bot.add_middleware(
-    FSMMiddleware,
-    storage=redis_storage,
-    fsm_instances=your_fsm_instance,
+``` python
+Bot(
+    collectors=...,
+    bot_accounts=...,
+    middlewares=[FSMMiddleware([myfile.fsm], state_repo_key="redis_repo")],
 )
 ```
 
-2. Создайте `enum` для возможных состояний автомата:
+2. Добавьте в `bot.state.{state_repo_key}` совместимый redis репозиторий:
 
-```python
+``` python
+bot.state.redis_repo = await RedisRepo.init(...)
+```
+
+3. Создайте `enum` для возможных состояний автомата:
+
+``` python
 from enum import Enum, auto
-from botx_fsm import FSM
+from botx_fsm import FSMCollector
 
 
-class ProcessStates(Enum):
-    state1 = auto()
-    state2 = auto()
+class LoginStates(Enum):
+    enter_email = auto()
+    enter_password = auto()
 
-fsm = FSM(ProcessStates)
+
+fsm = FSMCollector(LoginStates)
 ```
 
-3. Создайте обработчик конкретного состояния:
+4. Создайте обработчики конкретных состояний:
 
-```python
-from botx_fsm import FlowError
+``` python
+@fsm.on(LoginStates.enter_email)
+async def enter_email(message: IncomingMessage, bot: Bot) -> None:
+    email = message.body
+
+    if not check_user_exist(email):
+        await bot.answer_message("Wrong email, try again")
+        return
+
+    await message.state.fsm.change_state(LoginStates.enter_password, email=email)
+    await bot.answer_message("Enter your password")
 
 
-@fsm.on(ProcessStates.state1, on_success=ProcessStates.state2)
-async def process_state(message: Message, bot: Bot) -> None:
-    if message.body == "to_state2":
-        await bot.answer_message("going to state2", message)
-        return  # No exceptions, going to `on_success` argument state
+@fsm.on(LoginStates.enter_password)
+async def enter_password(message: IncomingMessage, bot: Bot) -> None:
+    email = message.state.fsm_storage.email
+    password = message.body
 
-    await bot.answer_message("wrong text, try again", message)
-    raise FlowError  # State haven't changed
+    try:
+        login(email, password)
+    except IncorrectPasswordError:
+        await bot.answer_message("Wrong password, try again")
+        return
+
+    await message.state.fsm.drop_state()
+    await bot.answer_message("Success!")
+
 ```
 
-4. Передайте управление обработчику состояний из любого обработчика сообщений:
+5. Передайте управление обработчику состояний из любого обработчика сообщений:
 
-```python
-# bot.py
-@collector.handler(command="/start-process")
-async def start_process_fsm(message: Message, bot: Bot) -> None:
-    await bot.answer_message("started process", message)
-    await fsm.change_state(message, ProcessStates.state1)
-```
-
-**Примечание:** В `example/bot` находятся примеры нескольких процессов,
-созданных через pybotx-fsm.
-
-
-## Продвинутая работа с библиотекой
-
-1. В `FlowError` можно передать состояние из enum-а, тогда бот автоматически
-   перейдёт в него. Также можно выбросить `FlowError(clear=True)`, чтобы выйти
-   из машины состояний (управление будет передано обработчикам сообщений).
-
-2. Помимо аргумента `on_success` для `@fsm.on` можно использовать `on_failure`.
-   Тогда выбрасывание `FlowError` без аргументов будет переводить в это
-   состояние.
-
-   Также есть состояние `unset`, которое позволяет выйти из
-   выполнения конечного автомата:
-
-```python
-from botx_fsm import unset
-
-
-@fsm.on(ProcessStates.state2, on_success=unset, on_failure=ProcessStates.state1)
-async def process_state(message: Message, bot: Bot) -> None:
-    ...
-```
-
-3. Чтобы передать данные в следующее состояние, необходимо явно вызвать процесс
-   перехода и распаковать данные в следующем состоянии.
-
-```python
-from botx_fsm import StateExtractor
-
-
-@collector.hidden(command="/start-process", name="start-process")
-async def start_process(message: Message, bot: Bot) -> None:
-    await fsm.change_state(message, ProcessStates.state1, foo="bar")
-
-
-@fsm.on(ProcessStates.state2, on_success=unset)
-async def get_additional_data(
-    message: Message, bot: Bot, foo: str = Depends(StateExtractor.foo)
-) -> None:
-    ...
+``` python
+@collector.handler(command="/login")
+async def start_login(message: IncomingMessage, bot: Bot) -> None:
+    await bot.answer_message("Enter your email")
+    await fsm.change_state(LoginStates.enter_email)
 ```

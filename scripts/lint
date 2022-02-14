@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -ex
+
+black --check --diff botx_fsm
+isort --profile black --check-only botx_fsm
+
+mypy botx_fsm
+flake8 botx_fsm
