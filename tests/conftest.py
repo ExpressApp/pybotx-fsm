@@ -1,9 +1,7 @@
-from typing import AsyncGenerator, Callable, Optional
+from typing import Callable, Optional
 from uuid import UUID, uuid4
 
-import httpx
 import pytest
-
 from botx import (
     BotAccount,
     BotAccountWithSecret,
@@ -42,12 +40,6 @@ def bot_account(host: str, bot_id: UUID) -> BotAccountWithSecret:
         host=host,
         secret_key="bee001",
     )
-
-
-@pytest.fixture
-async def httpx_client() -> AsyncGenerator[httpx.AsyncClient, None]:
-    async with httpx.AsyncClient() as client:
-        yield client
 
 
 @pytest.fixture

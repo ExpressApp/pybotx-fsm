@@ -1,9 +1,8 @@
 import asyncio
 from enum import Enum, auto
 from typing import Callable
-from unittest.mock import AsyncMock
+from unittest.mock import Mock
 
-import pytest
 from botx import (
     Bot,
     BotAccountWithSecret,
@@ -17,48 +16,40 @@ from botx_fsm import FSMCollector, FSMMiddleware
 from tests.state_repo import StateRepo
 
 
-class EnumForTests(Enum):
-    FIRST_STATE = auto()
-    SECOND_STATE = auto()
+@mark.asyncio
+async def test_changing_state_on_successful(
+    bot_account: BotAccountWithSecret,
+    incoming_message_factory: Callable[..., IncomingMessage],
+) -> None:
+    # - Arrange -
+    first_handler_trigger = Mock()
+    second_handler_trigger = Mock()
+    default_handler_trigger = Mock()
 
+    class EnumForTests(Enum):
+        FIRST_STATE = auto()
+        SECOND_STATE = auto()
 
-@pytest.fixture
-def first_handler() -> AsyncMock:
-    async def process_first_state(message: IncomingMessage, bot: Bot) -> None:
-        await message.state.fsm.change_state(EnumForTests.SECOND_STATE)
-
-    return AsyncMock(wraps=process_first_state)
-
-
-@pytest.fixture
-def second_handler() -> AsyncMock:
-    async def process_second_state(message: IncomingMessage, bot: Bot) -> None:
-        await message.state.fsm.drop_state()
-
-    return AsyncMock(wraps=process_second_state)
-
-
-@pytest.fixture
-def fsm(first_handler: AsyncMock, second_handler: AsyncMock) -> FSMCollector:
+    collector = HandlerCollector()
     fsm = FSMCollector(EnumForTests)
 
-    fsm.on(EnumForTests.FIRST_STATE)(first_handler)
-    fsm.on(EnumForTests.SECOND_STATE)(second_handler)
+    @fsm.on(EnumForTests.FIRST_STATE)
+    async def process_first_state(message: IncomingMessage, _: Bot) -> None:
+        await message.state.fsm.change_state(EnumForTests.SECOND_STATE)
+        first_handler_trigger()
 
-    return fsm
-
-
-@pytest.fixture
-def bot(fsm: FSMCollector, bot_account: BotAccountWithSecret) -> Bot:
-    collector = HandlerCollector()
-
-    @collector.command("/fsm", visible=False)
-    async def fsm_handler(message: IncomingMessage, bot: Bot) -> None:
-        await message.state.fsm.change_state(EnumForTests.FIRST_STATE)
+    @fsm.on(EnumForTests.SECOND_STATE)
+    async def process_second_state(message: IncomingMessage, _: Bot) -> None:
+        await message.state.fsm.drop_state()
+        second_handler_trigger()
 
     @collector.default_message_handler
-    async def default_handler(message: IncomingMessage, bot: Bot) -> None:
-        return
+    async def default_handler(_: IncomingMessage, __: Bot) -> None:
+        default_handler_trigger()
+
+    @collector.command("/fsm", visible=False)
+    async def fsm_handler(message: IncomingMessage, _: Bot) -> None:
+        await message.state.fsm.change_state(EnumForTests.FIRST_STATE)
 
     built_bot = Bot(
         collectors=[collector],
@@ -66,30 +57,24 @@ def bot(fsm: FSMCollector, bot_account: BotAccountWithSecret) -> Bot:
         middlewares=[FSMMiddleware([fsm], state_repo_key="state_repo")],
     )
     built_bot.state.state_repo = StateRepo()
-    return built_bot
 
-
-@mark.asyncio
-async def test_changing_state_on_successful(
-    bot: Bot,
-    incoming_message_factory: Callable[..., IncomingMessage],
-    first_handler: AsyncMock,
-    second_handler: AsyncMock,
-) -> None:
-    # - Arrange -
-    start_message = incoming_message_factory(body="/fsm")
+    init_message = incoming_message_factory(body="/fsm")
     first_message = incoming_message_factory(body="text")
     second_message = incoming_message_factory(body="text")
+    third_message = incoming_message_factory(body="text")
 
     # - Act -
-    async with lifespan_wrapper(bot) as bot:
-        bot.async_execute_bot_command(start_message)
-        await asyncio.sleep(0)
+    async with lifespan_wrapper(built_bot) as bot:
+        bot.async_execute_bot_command(init_message)
+        await asyncio.sleep(0)  # Return control to event loop
         bot.async_execute_bot_command(first_message)
-        await asyncio.sleep(0)
+        await asyncio.sleep(0)  # Return control to event loop
         bot.async_execute_bot_command(second_message)
-        await asyncio.sleep(0)
+        await asyncio.sleep(0)  # Return control to event loop
+        bot.async_execute_bot_command(third_message)
+        await asyncio.sleep(0)  # Return control to event loop
 
     # - Assert -
-    first_handler.assert_awaited_once_with(first_message, bot)
-    second_handler.assert_awaited_once_with(second_message, bot)
+    assert first_handler_trigger.called
+    assert second_handler_trigger.called
+    assert default_handler_trigger.called
