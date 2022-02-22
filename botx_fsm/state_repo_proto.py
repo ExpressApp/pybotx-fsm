@@ -3,7 +3,7 @@ from typing import Any, Hashable, Optional
 from typing_extensions import Protocol
 
 
-class StateRepoProto(Protocol):
+class StateRepoProto(Protocol):  # pragma: no cover
     async def get(self, key: Hashable, default: Any = None) -> Any:
         ...
 
