@@ -2,15 +2,39 @@ name: Python application
 on: push
 jobs:
 
+  test:
+    name: Test
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [ "3.8", "3.9", "3.10" ]
+
+    steps:
+      - name: Setup dependencies
+        uses: ExpressApp/github-actions-poetry@v0.2
+        with:
+          python-version: ${{ matrix.python-version }}
+          poetry-version: "1.1.12"
+
+      - name: Run tests
+        run: |
+          poetry run ./scripts/test
+
+
   lint:
     name: Lint
     runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: [ "3.8", "3.9", "3.10" ]
 
     steps:
-      - name: Setup
-        uses: ExpressApp/github-actions-poetry@v0.1
+      - name: Setup dependencies
+        uses: ExpressApp/github-actions-poetry@v0.2
+        with:
+          python-version: ${{ matrix.python-version }}
+          poetry-version: "1.1.12"
 
       - name: Run lint
         run: |
-          source .venv/bin/activate
-          ./scripts/lint
+          poetry run ./scripts/lint
