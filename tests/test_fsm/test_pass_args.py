@@ -10,13 +10,11 @@ from botx import (
     IncomingMessage,
     lifespan_wrapper,
 )
-from pytest import mark
 
 from botx_fsm import FSMCollector, FSMMiddleware
 from tests.state_repo import StateRepo
 
 
-@mark.asyncio
 async def test_check_state(
     bot_account: BotAccountWithSecret,
     incoming_message_factory: Callable[..., IncomingMessage],
