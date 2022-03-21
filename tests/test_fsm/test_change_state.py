@@ -3,7 +3,7 @@ from enum import Enum, auto
 from typing import Callable
 from unittest.mock import Mock
 
-from botx import (
+from pybotx import (
     Bot,
     BotAccountWithSecret,
     HandlerCollector,
@@ -11,7 +11,7 @@ from botx import (
     lifespan_wrapper,
 )
 
-from botx_fsm import FSMCollector, FSMMiddleware
+from pybotx_fsm import FSMCollector, FSMMiddleware
 from tests.state_repo import StateRepo
 
 

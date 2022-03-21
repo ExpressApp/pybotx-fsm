@@ -3,10 +3,10 @@ from enum import Enum
 from types import SimpleNamespace
 from typing import Any
 
-from botx import IncomingMessage
+from pybotx import IncomingMessage
 
-from botx_fsm.state_repo_proto import StateRepoProto
-from botx_fsm.templates import KEY_TEMPLATE
+from pybotx_fsm.state_repo_proto import StateRepoProto
+from pybotx_fsm.templates import KEY_TEMPLATE
 
 
 @dataclass

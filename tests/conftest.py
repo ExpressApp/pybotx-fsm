@@ -2,7 +2,7 @@ from typing import Callable, Optional
 from uuid import UUID, uuid4
 
 import pytest
-from botx import (
+from pybotx import (
     BotAccount,
     BotAccountWithSecret,
     Chat,

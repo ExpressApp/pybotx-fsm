@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Callable, Optional, Sequence, Set, Type
 
-from botx import HandlerCollector, IncomingMessageHandlerFunc, Middleware
+from pybotx import HandlerCollector, IncomingMessageHandlerFunc, Middleware
 
-from botx_fsm.templates import COMMAND_NAME_TEMPLATE
+from pybotx_fsm.templates import COMMAND_NAME_TEMPLATE
 
 
 class FSMCollector(HandlerCollector):

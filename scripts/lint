@@ -2,8 +2,8 @@
 
 set -ex
 
-black --check --diff botx_fsm
-isort --profile black --check-only botx_fsm
+black --check --diff pybotx_fsm
+isort --profile black --check-only pybotx_fsm
 
-mypy botx_fsm
-flake8 botx_fsm
+mypy pybotx_fsm
+flake8 pybotx_fsm

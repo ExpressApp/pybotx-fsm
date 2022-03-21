@@ -48,7 +48,7 @@ bot.state.redis_repo = await RedisRepo.init(...)
 
 ``` python
 from enum import Enum, auto
-from botx_fsm import FSMCollector
+from pybotx_fsm import FSMCollector
 
 
 class LoginStates(Enum):

@@ -1,11 +1,11 @@
 from typing import Optional, Sequence
 
-from botx import Bot, HandlerCollector, IncomingMessage, IncomingMessageHandlerFunc
+from pybotx import Bot, HandlerCollector, IncomingMessage, IncomingMessageHandlerFunc
 
-from botx_fsm.collector import FSMCollector
-from botx_fsm.fsm import FSM, FSMStateData
-from botx_fsm.state_repo_proto import StateRepoProto
-from botx_fsm.templates import COMMAND_NAME_TEMPLATE, KEY_TEMPLATE
+from pybotx_fsm.collector import FSMCollector
+from pybotx_fsm.fsm import FSM, FSMStateData
+from pybotx_fsm.state_repo_proto import StateRepoProto
+from pybotx_fsm.templates import COMMAND_NAME_TEMPLATE, KEY_TEMPLATE
 
 
 class FSMMiddleware:

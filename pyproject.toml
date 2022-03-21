@@ -1,8 +1,8 @@
 # https://python-poetry.org/docs/
 
 [tool.poetry]
-name = "botx-fsm"
-version = "0.2.0"
+name = "pybotx-fsm"
+version = "0.3.0"
 description = "FSM middleware for using with pybotx"
 authors = []
 
@@ -10,7 +10,7 @@ authors = []
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
 
-botx = "~0.30.0"
+pybotx = "~0.32.0"
 
 [tool.poetry.dev-dependencies]
 add-trailing-comma = "2.2.1"
