@@ -7,7 +7,7 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": ["botx"],
+      "matchPackageNames": ["pybotx"],
       "matchUpdateTypes": ["patch"],
       "automerge": true
     }
