@@ -19,7 +19,7 @@ isort = "5.10.1"
 mypy = "0.910.0"
 wemake-python-styleguide = "0.16.0"
 
-bandit = "1.7.2"  # https://github.com/PyCQA/bandit/issues/837
+bandit = "1.7.4"  # https://github.com/PyCQA/bandit/issues/837
 
 pytest = "^6.2.5"
 pytest-asyncio = "0.18.1"
