@@ -19,11 +19,10 @@
 
 
 ## Установка
+Используя `poetry`:
 
-Добавьте эту строку в зависимости проекта в `pyproject.toml`:
-
-```toml
-botx-fsm = { git = "https://github.com/ExpressApp/pybotx-fsm", rev = "0.2.0" }
+```bash
+poetry add pybotx-fsm
 ```
 
 ## Работа с графом состояний
