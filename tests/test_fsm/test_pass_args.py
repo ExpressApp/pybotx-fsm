@@ -70,14 +70,10 @@ async def test_check_state(
 
     # - Act -
     async with lifespan_wrapper(built_bot) as bot:
-        bot.async_execute_bot_command(init_message)
-        await asyncio.sleep(0)  # Return control to event loop
-        bot.async_execute_bot_command(first_message)
-        await asyncio.sleep(0)  # Return control to event loop
-        bot.async_execute_bot_command(second_message)
-        await asyncio.sleep(0)  # Return control to event loop
-        bot.async_execute_bot_command(third_message)
-        await asyncio.sleep(0)  # Return control to event loop
+        await bot.async_execute_bot_command(init_message)
+        await bot.async_execute_bot_command(first_message)
+        await bot.async_execute_bot_command(second_message)
+        await bot.async_execute_bot_command(third_message)
 
     # - Assert -
     assert first_message.state.fsm_storage.first_message == "Hello Friend!"
