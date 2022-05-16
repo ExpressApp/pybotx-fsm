@@ -9,7 +9,7 @@ authors = []
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
-pybotx = ">=0.32.0,<0.41.0"
+pybotx = ">=0.35.0,<0.41.0"
 
 [tool.poetry.dev-dependencies]
 add-trailing-comma = "2.2.3"

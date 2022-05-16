@@ -63,14 +63,10 @@ async def test_changing_state_on_successful(
 
     # - Act -
     async with lifespan_wrapper(built_bot) as bot:
-        bot.async_execute_bot_command(init_message)
-        await asyncio.sleep(0)  # Return control to event loop
-        bot.async_execute_bot_command(first_message)
-        await asyncio.sleep(0)  # Return control to event loop
-        bot.async_execute_bot_command(second_message)
-        await asyncio.sleep(0)  # Return control to event loop
-        bot.async_execute_bot_command(third_message)
-        await asyncio.sleep(0)  # Return control to event loop
+        await bot.async_execute_bot_command(init_message)
+        await bot.async_execute_bot_command(first_message)
+        await bot.async_execute_bot_command(second_message)
+        await bot.async_execute_bot_command(third_message)
 
     # - Assert -
     assert first_handler_trigger.called
