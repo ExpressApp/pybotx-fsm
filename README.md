@@ -29,27 +29,14 @@ poetry add pybotx-fsm
 
 ### Минимальный пример бота с конечным автоматом
 
-```python
-from enum import Enum, auto
-from uuid import UUID
-
-from pybotx import Bot, BotAccountWithSecret, HandlerCollector, IncomingMessage
-
-from pybotx_fsm import FSMCollector, FSMMiddleware
-
-
+```python #fsm_sample_snippet
+# Здесь и далее будут пропущены импорты и код, не затрагивающий
+# непосредственно pybotx_fsm
 class FsmStates(Enum):
     EXAMPLE_STATE = auto()
 
 
-collector = HandlerCollector()
 fsm = FSMCollector(FsmStates)
-
-
-@collector.command("/echo", description="Echo command")
-async def help_command(message: IncomingMessage, bot: Bot) -> None:
-    await message.state.fsm.change_state(FsmStates.EXAMPLE_STATE)
-    await bot.answer_message("Input your text:")
 
 
 @fsm.on(FsmStates.EXAMPLE_STATE)
@@ -80,23 +67,7 @@ bot = Bot(
 
 
 ### Передача данных между состояниями
-```python
-from enum import Enum, auto
-
-from pybotx import Bot, HandlerCollector, IncomingMessage
-
-from pybotx_fsm import FSMCollector
-
-
-class FsmStates(Enum):
-    INPUT_FIRST_NAME = auto()
-    INPUT_LAST_NAME = auto()
-
-
-collector = HandlerCollector()
-fsm = FSMCollector(FsmStates)
-
-
+```python #fsm_storage_snippet
 @collector.command("/login", description="Login command")
 async def help_command(message: IncomingMessage, bot: Bot) -> None:
     await message.state.fsm.change_state(FsmStates.INPUT_FIRST_NAME)
