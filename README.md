@@ -68,7 +68,7 @@ Bot(
 
 3. Добавьте в `bot.state.{state_repo_key}` совместимый redis репозиторий:
 
-```python
+```python #noqa
 bot.state.redis_repo = await RedisRepo.init(...)
 ```
 
