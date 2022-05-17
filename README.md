@@ -39,6 +39,12 @@ class FsmStates(Enum):
 fsm = FSMCollector(FsmStates)
 
 
+@collector.command("/echo", description="Echo command")
+async def help_command(message: IncomingMessage, bot: Bot) -> None:
+    await message.state.fsm.change_state(FsmStates.EXAMPLE_STATE)
+    await bot.answer_message("Input your text:")
+
+
 @fsm.on(FsmStates.EXAMPLE_STATE)
 async def example_state(message: IncomingMessage, bot: Bot) -> None:
     user_text = message.body
@@ -68,12 +74,6 @@ bot = Bot(
 
 ### Передача данных между состояниями
 ```python #fsm_storage_snippet
-@collector.command("/login", description="Login command")
-async def help_command(message: IncomingMessage, bot: Bot) -> None:
-    await message.state.fsm.change_state(FsmStates.INPUT_FIRST_NAME)
-    await bot.answer_message("Input your first name:")
-
-
 @fsm.on(FsmStates.INPUT_FIRST_NAME)
 async def input_first_name(message: IncomingMessage, bot: Bot) -> None:
     first_name = message.body
