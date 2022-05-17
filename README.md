@@ -25,6 +25,94 @@
 poetry add pybotx-fsm
 ```
 
+## Работа с графом состояний
+
+1. Создайте `enum` для возможных состояний автомата:
+
+```python #fsm_init
+from enum import Enum, auto
+
+from pybotx_fsm import FSMCollector
+
+
+class LoginStates(Enum):
+    enter_email = auto()
+    enter_password = auto()
+
+
+fsm = FSMCollector(LoginStates)
+```
+
+
+2. Добавьте экземпляр автомата в мидлвари для того, чтобы бот мог использовать его:
+
+```python #fsm_usage
+Bot(
+    collectors=[
+        myfile.collector,
+    ],
+    bot_accounts=[
+        BotAccountWithSecret(
+            # Не забудьте заменить эти учётные данные на настоящие,
+            # когда создадите бота в панели администратора.
+            id=UUID("123e4567-e89b-12d3-a456-426655440000"),
+            host="cts.example.com",
+            secret_key="e29b417773f2feab9dac143ee3da20c5",
+        ),
+    ],
+    middlewares=[
+        FSMMiddleware([myfile.fsm], state_repo_key="redis_repo"),
+    ],
+)
+```
+
+3. Добавьте в `bot.state.{state_repo_key}` совместимый redis репозиторий:
+
+```python
+bot.state.redis_repo = await RedisRepo.init(...)
+```
+
+
+4. Создайте обработчики конкретных состояний:
+
+```python #fsm_state_handlers
+@fsm.on(LoginStates.enter_email)
+async def enter_email(message: IncomingMessage, bot: Bot) -> None:
+    email = message.body
+
+    if not check_user_exist(email):
+        await bot.answer_message("Wrong email, try again")
+        return
+
+    await message.state.fsm.change_state(LoginStates.enter_password, email=email)
+    await bot.answer_message("Enter your password")
+
+
+@fsm.on(LoginStates.enter_password)
+async def enter_password(message: IncomingMessage, bot: Bot) -> None:
+    email = message.state.fsm_storage.email
+    password = message.body
+
+    try:
+        login(email, password)
+    except IncorrectPasswordError:
+        await bot.answer_message("Wrong password, try again")
+        return
+
+    await message.state.fsm.drop_state()
+    await bot.answer_message("Success!")
+```
+
+5. Передайте управление обработчику состояний из любого обработчика сообщений:
+
+```python #fsm_change_state
+@collector.command("/login")
+async def start_login(message: IncomingMessage, bot: Bot) -> None:
+    await bot.answer_message("Enter your email")
+    await message.state.fsm.change_state(LoginStates.enter_email)
+```
+
+
 ## Примеры
 
 ### Минимальный пример бота с конечным автоматом
