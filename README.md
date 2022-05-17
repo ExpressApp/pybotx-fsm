@@ -117,7 +117,7 @@ async def start_login(message: IncomingMessage, bot: Bot) -> None:
 
 ### Минимальный пример бота с конечным автоматом
 
-```python #fsm_sample_snippet
+```python #fsm_sample
 # Здесь и далее будут пропущены импорты и код, не затрагивающий
 # непосредственно pybotx_fsm
 class FsmStates(Enum):
@@ -161,7 +161,7 @@ bot = Bot(
 
 
 ### Передача данных между состояниями
-```python #fsm_storage_snippet
+```python #fsm_storage
 @fsm.on(FsmStates.INPUT_FIRST_NAME)
 async def input_first_name(message: IncomingMessage, bot: Bot) -> None:
     first_name = message.body

@@ -2,7 +2,7 @@ import re
 import shutil
 
 snippets_dir_path = ".snippets"
-pre_snippets_dir_path="scripts/pre_snippets"
+pre_snippets_dir_path = ".snippets_setup"
 
 with open("README.md") as file:
     for file_name, snippet in re.findall(r"(?s)(?<=```python #)(\w*)\n(.*?)(?=```)", file.read()):

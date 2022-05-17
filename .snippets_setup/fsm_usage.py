@@ -12,6 +12,8 @@ class LoginStates(Enum):
     enter_password = auto()
 
 
+# Здесь модуль мокается. В вашем случае должен импортироваться файл
+# `myfile`, в котором определены `fsm` и `collector`
 Module = namedtuple("Module", ("fsm", "collector"))
 
 myfile = Module(FSMCollector(LoginStates), HandlerCollector())
