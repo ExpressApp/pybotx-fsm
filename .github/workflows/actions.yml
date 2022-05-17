@@ -38,3 +38,16 @@ jobs:
       - name: Run lint
         run: |
           poetry run ./scripts/lint
+  
+
+  docs-lint:
+    name: Docs lint
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Setup dependencies
+        uses: ExpressApp/github-actions-poetry@v0.2
+
+      - name: Run linters
+        run: |
+          poetry run ./scripts/docs-lint
