@@ -25,75 +25,98 @@
 poetry add pybotx-fsm
 ```
 
-## Работа с графом состояний
+## Примеры
 
-1. Добавьте экземпляр автомата в мидлвари для того, чтобы бот мог использовать его:
+### Минимальный пример бота с конечным автоматом
 
-``` python
-Bot(
-    collectors=...,
-    bot_accounts=...,
-    middlewares=[FSMMiddleware([myfile.fsm], state_repo_key="redis_repo")],
+```python
+from enum import Enum, auto
+from uuid import UUID
+
+from pybotx import Bot, BotAccountWithSecret, HandlerCollector, IncomingMessage
+
+from pybotx_fsm import FSMCollector, FSMMiddleware
+
+
+class FsmStates(Enum):
+    EXAMPLE_STATE = auto()
+
+
+collector = HandlerCollector()
+fsm = FSMCollector(FsmStates)
+
+
+@collector.command("/echo", description="Echo command")
+async def help_command(message: IncomingMessage, bot: Bot) -> None:
+    await message.state.fsm.change_state(FsmStates.EXAMPLE_STATE)
+    await bot.answer_message("Input your text:")
+
+
+@fsm.on(FsmStates.EXAMPLE_STATE)
+async def example_state(message: IncomingMessage, bot: Bot) -> None:
+    user_text = message.body
+    await message.state.fsm.drop_state()
+    await bot.answer_message(f"Your text is {user_text}")
+
+
+bot = Bot(
+    collectors=[
+        collector,
+    ],
+    bot_accounts=[
+        BotAccountWithSecret(
+            # Не забудьте заменить эти учётные данные на настоящие,
+            # когда создадите бота в панели администратора.
+            id=UUID("123e4567-e89b-12d3-a456-426655440000"),
+            host="cts.example.com",
+            secret_key="e29b417773f2feab9dac143ee3da20c5",
+        ),
+    ],
+    middlewares=[
+        FSMMiddleware([fsm], state_repo_key="redis_repo"),
+    ],
 )
 ```
 
-2. Добавьте в `bot.state.{state_repo_key}` совместимый redis репозиторий:
 
-``` python
-bot.state.redis_repo = await RedisRepo.init(...)
-```
-
-3. Создайте `enum` для возможных состояний автомата:
-
-``` python
+### Передача данных между состояниями
+```python
 from enum import Enum, auto
+
+from pybotx import Bot, HandlerCollector, IncomingMessage
+
 from pybotx_fsm import FSMCollector
 
 
-class LoginStates(Enum):
-    enter_email = auto()
-    enter_password = auto()
+class FsmStates(Enum):
+    INPUT_FIRST_NAME = auto()
+    INPUT_LAST_NAME = auto()
 
 
-fsm = FSMCollector(LoginStates)
-```
-
-4. Создайте обработчики конкретных состояний:
-
-``` python
-@fsm.on(LoginStates.enter_email)
-async def enter_email(message: IncomingMessage, bot: Bot) -> None:
-    email = message.body
-
-    if not check_user_exist(email):
-        await bot.answer_message("Wrong email, try again")
-        return
-
-    await message.state.fsm.change_state(LoginStates.enter_password, email=email)
-    await bot.answer_message("Enter your password")
+collector = HandlerCollector()
+fsm = FSMCollector(FsmStates)
 
 
-@fsm.on(LoginStates.enter_password)
-async def enter_password(message: IncomingMessage, bot: Bot) -> None:
-    email = message.state.fsm_storage.email
-    password = message.body
+@collector.command("/login", description="Login command")
+async def help_command(message: IncomingMessage, bot: Bot) -> None:
+    await message.state.fsm.change_state(FsmStates.INPUT_FIRST_NAME)
+    await bot.answer_message("Input your first name:")
 
-    try:
-        login(email, password)
-    except IncorrectPasswordError:
-        await bot.answer_message("Wrong password, try again")
-        return
 
+@fsm.on(FsmStates.INPUT_FIRST_NAME)
+async def input_first_name(message: IncomingMessage, bot: Bot) -> None:
+    first_name = message.body
+    await message.state.fsm.change_state(
+        FsmStates.INPUT_LAST_NAME,
+        first_name=first_name,
+    )
+    await bot.answer_message("Input your last name:")
+
+
+@fsm.on(FsmStates.INPUT_LAST_NAME)
+async def input_last_name(message: IncomingMessage, bot: Bot) -> None:
+    first_name = message.state.fsm_storage.first_name
+    last_name = message.body
     await message.state.fsm.drop_state()
-    await bot.answer_message("Success!")
-
-```
-
-5. Передайте управление обработчику состояний из любого обработчика сообщений:
-
-``` python
-@collector.handler(command="/login")
-async def start_login(message: IncomingMessage, bot: Bot) -> None:
-    await bot.answer_message("Enter your email")
-    await fsm.change_state(LoginStates.enter_email)
+    await bot.answer_message(f"Hello {first_name} {last_name}!")
 ```
