@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+
+snippets_dir_path=".snippets"
+
+rm -rf "${snippets_dir_path}"
+mkdir "${snippets_dir_path}"
+
+python scripts/collect_snippets.py
+
+isort --profile black --check-only "${snippets_dir_path}"
+black --check --diff "${snippets_dir_path}"
+mypy "${snippets_dir_path}"
+flake8 "${snippets_dir_path}"
+
+rm -rf "${snippets_dir_path}"

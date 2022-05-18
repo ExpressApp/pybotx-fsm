@@ -27,26 +27,11 @@ poetry add pybotx-fsm
 
 ## Работа с графом состояний
 
-1. Добавьте экземпляр автомата в мидлвари для того, чтобы бот мог использовать его:
+1. Создайте `enum` для возможных состояний автомата:
 
-``` python
-Bot(
-    collectors=...,
-    bot_accounts=...,
-    middlewares=[FSMMiddleware([myfile.fsm], state_repo_key="redis_repo")],
-)
-```
-
-2. Добавьте в `bot.state.{state_repo_key}` совместимый redis репозиторий:
-
-``` python
-bot.state.redis_repo = await RedisRepo.init(...)
-```
-
-3. Создайте `enum` для возможных состояний автомата:
-
-``` python
+```python #fsm_init
 from enum import Enum, auto
+
 from pybotx_fsm import FSMCollector
 
 
@@ -58,9 +43,39 @@ class LoginStates(Enum):
 fsm = FSMCollector(LoginStates)
 ```
 
+
+2. Добавьте экземпляр автомата в мидлвари для того, чтобы бот мог использовать его:
+
+```python #fsm_usage
+Bot(
+    collectors=[
+        myfile.collector,
+    ],
+    bot_accounts=[
+        BotAccountWithSecret(
+            # Не забудьте заменить эти учётные данные на настоящие,
+            # когда создадите бота в панели администратора.
+            id=UUID("123e4567-e89b-12d3-a456-426655440000"),
+            host="cts.example.com",
+            secret_key="e29b417773f2feab9dac143ee3da20c5",
+        ),
+    ],
+    middlewares=[
+        FSMMiddleware([myfile.fsm], state_repo_key="redis_repo"),
+    ],
+)
+```
+
+3. Добавьте в `bot.state.{state_repo_key}` совместимый redis репозиторий:
+
+```python #noqa
+bot.state.redis_repo = await RedisRepo.init(...)
+```
+
+
 4. Создайте обработчики конкретных состояний:
 
-``` python
+```python #fsm_state_handlers
 @fsm.on(LoginStates.enter_email)
 async def enter_email(message: IncomingMessage, bot: Bot) -> None:
     email = message.body
@@ -86,14 +101,81 @@ async def enter_password(message: IncomingMessage, bot: Bot) -> None:
 
     await message.state.fsm.drop_state()
     await bot.answer_message("Success!")
-
 ```
 
 5. Передайте управление обработчику состояний из любого обработчика сообщений:
 
-``` python
-@collector.handler(command="/login")
+```python #fsm_change_state
+@collector.command("/login")
 async def start_login(message: IncomingMessage, bot: Bot) -> None:
     await bot.answer_message("Enter your email")
-    await fsm.change_state(LoginStates.enter_email)
+    await message.state.fsm.change_state(LoginStates.enter_email)
+```
+
+
+## Примеры
+
+### Минимальный пример бота с конечным автоматом
+
+```python #fsm_sample
+# Здесь и далее будут пропущены импорты и код, не затрагивающий
+# непосредственно pybotx_fsm
+class FsmStates(Enum):
+    EXAMPLE_STATE = auto()
+
+
+fsm = FSMCollector(FsmStates)
+
+
+@collector.command("/echo", description="Echo command")
+async def help_command(message: IncomingMessage, bot: Bot) -> None:
+    await message.state.fsm.change_state(FsmStates.EXAMPLE_STATE)
+    await bot.answer_message("Input your text:")
+
+
+@fsm.on(FsmStates.EXAMPLE_STATE)
+async def example_state(message: IncomingMessage, bot: Bot) -> None:
+    user_text = message.body
+    await message.state.fsm.drop_state()
+    await bot.answer_message(f"Your text is {user_text}")
+
+
+bot = Bot(
+    collectors=[
+        collector,
+    ],
+    bot_accounts=[
+        BotAccountWithSecret(
+            # Не забудьте заменить эти учётные данные на настоящие,
+            # когда создадите бота в панели администратора.
+            id=UUID("123e4567-e89b-12d3-a456-426655440000"),
+            host="cts.example.com",
+            secret_key="e29b417773f2feab9dac143ee3da20c5",
+        ),
+    ],
+    middlewares=[
+        FSMMiddleware([fsm], state_repo_key="redis_repo"),
+    ],
+)
+```
+
+
+### Передача данных между состояниями
+```python #fsm_storage
+@fsm.on(FsmStates.INPUT_FIRST_NAME)
+async def input_first_name(message: IncomingMessage, bot: Bot) -> None:
+    first_name = message.body
+    await message.state.fsm.change_state(
+        FsmStates.INPUT_LAST_NAME,
+        first_name=first_name,
+    )
+    await bot.answer_message("Input your last name:")
+
+
+@fsm.on(FsmStates.INPUT_LAST_NAME)
+async def input_last_name(message: IncomingMessage, bot: Bot) -> None:
+    first_name = message.state.fsm_storage.first_name
+    last_name = message.body
+    await message.state.fsm.drop_state()
+    await bot.answer_message(f"Hello {first_name} {last_name}!")
 ```
