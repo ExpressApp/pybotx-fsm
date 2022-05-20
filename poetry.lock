@@ -571,7 +571,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
 name = "pybotx"
-version = "0.40.0"
+version = "0.41.0"
 description = "A python library for interacting with eXpress BotX API"
 category = "main"
 optional = false
@@ -840,7 +840,7 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.11"
-content-hash = "ec619eac5002aeb3bac8f9d6644f51b3a0a526099d65bc6b7052023bafdeee54"
+content-hash = "bc1c91fd5c2ee8c6c97435bcc6bc3d9698581f023ca0352a5550f09c355c3355"
 
 [metadata.files]
 add-trailing-comma = [
@@ -1080,8 +1080,8 @@ py = [
     {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
 ]
 pybotx = [
-    {file = "pybotx-0.40.0-py3-none-any.whl", hash = "sha256:c0c7f78cb2992d95340206f6b74aa2c9ac58b19991d3edfada6a6bdd86ae8c7a"},
-    {file = "pybotx-0.40.0.tar.gz", hash = "sha256:ac2a3a1c2a2a377672aea91f5eb3ea28bb8447da8020c49bf939e4d7b91c0719"},
+    {file = "pybotx-0.41.0-py3-none-any.whl", hash = "sha256:8891e5e6aa7ba4092a9d593dedb351c1821822cdb31a90eff79e7cd7c238ee2c"},
+    {file = "pybotx-0.41.0.tar.gz", hash = "sha256:f3263bd13ae037691fcecee66223cb4cd016b38f71935bada1fd717921da8530"},
 ]
 pycodestyle = [
     {file = "pycodestyle-2.8.0-py2.py3-none-any.whl", hash = "sha256:720f8b39dde8b293825e7ff02c475f3077124006db4f440dcbc9a20b76548a20"},
