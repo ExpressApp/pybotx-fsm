@@ -7,9 +7,10 @@
   ],
   "packageRules": [
     {
+      "automerge": true,
       "matchPackageNames": ["pybotx"],
       "matchUpdateTypes": ["patch"],
-      "automerge": true
+      "rangeStrategy": "widen"
     }
   ]
 }
