@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from types import SimpleNamespace
-from typing import Any
+from typing import Any, Optional
 
 from pybotx import IncomingMessage
 
@@ -30,6 +30,21 @@ class FSM:
             ),
             FSMStateData(state, SimpleNamespace(**kwargs)),
         )
+
+    async def get_state(self) -> Optional[Enum]:
+        fsm_state_data: Optional[FSMStateData] = await self._state_repo.get(
+            KEY_TEMPLATE.format(
+                host=self._message.bot.host,
+                bot_id=self._message.bot.id,
+                chat_id=self._message.chat.id,
+                user_huid=self._message.sender.huid,
+            ),
+        )
+
+        if not fsm_state_data:
+            return None
+
+        return fsm_state_data.state
 
     async def drop_state(self) -> None:
         await self._state_repo.delete(
