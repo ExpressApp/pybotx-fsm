@@ -9,7 +9,6 @@
     {
       "automerge": true,
       "matchPackageNames": ["pybotx"],
-      "matchUpdateTypes": ["patch"],
       "rangeStrategy": "widen"
     }
   ]
