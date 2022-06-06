@@ -1,5 +1,4 @@
 {
-  "bumpVersion": "patch",
   "extends": [
     "config:base"
   ],
