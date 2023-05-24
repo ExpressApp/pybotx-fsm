@@ -2,13 +2,13 @@
 
 [tool.poetry]
 name = "pybotx-fsm"
-version = "0.4.8"
+version = "0.4.9"
 description = "FSM middleware for using with pybotx"
 readme = "README.md"
 authors = []
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
+python = ">=3.8,<3.12"
 
 pybotx = ">=0.44.1,<0.56.0"
 
