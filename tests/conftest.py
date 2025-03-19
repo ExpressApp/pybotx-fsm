@@ -11,6 +11,7 @@ from pybotx import (
     UserDevice,
     UserSender,
 )
+from pydantic import AnyHttpUrl
 
 
 @pytest.fixture
@@ -29,15 +30,15 @@ def chat_id() -> UUID:
 
 
 @pytest.fixture
-def host() -> str:
-    return "cts.example.com"
+def host() -> AnyHttpUrl:
+    return AnyHttpUrl(url="https://cts.example.com", scheme="https")
 
 
 @pytest.fixture
-def bot_account(host: str, bot_id: UUID) -> BotAccountWithSecret:
+def bot_account(host: AnyHttpUrl, bot_id: UUID) -> BotAccountWithSecret:
     return BotAccountWithSecret(
         id=bot_id,
-        host=host,
+        cts_url=host,
         secret_key="bee001",
     )
 
