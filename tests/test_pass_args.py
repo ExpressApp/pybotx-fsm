@@ -1,4 +1,3 @@
-import asyncio
 from enum import Enum, auto
 from typing import Callable
 from unittest.mock import Mock
