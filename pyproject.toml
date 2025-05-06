@@ -15,7 +15,7 @@ pybotx = ">=0.65.0"
 [tool.poetry.dev-dependencies]
 add-trailing-comma = "2.2.3"
 autoflake = "2.3.1"
-black = "22.3.0"
+black = "24.3.0"
 isort = "5.10.1"
 mypy = "0.950.0"
 wemake-python-styleguide = "0.18.0"
