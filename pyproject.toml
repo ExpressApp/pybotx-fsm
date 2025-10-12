@@ -16,7 +16,7 @@ pybotx = ">=0.75.0"
 add-trailing-comma = "3.1.0"
 autoflake = "2.3.1"
 black = "25.1.0"
-isort = "6.0.1"
+isort = "7.0.0"
 mypy = "1.15.0"
 wemake-python-styleguide = "0.19.2"
 
