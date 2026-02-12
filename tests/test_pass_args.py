@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import Callable
+from collections.abc import Callable
 from unittest.mock import Mock
 
 from pybotx import (

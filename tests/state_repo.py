@@ -1,4 +1,4 @@
-from typing import Any, Hashable, Optional
+from typing import Any, Hashable
 
 
 class StateRepo:
@@ -9,7 +9,7 @@ class StateRepo:
         return self._storage.get(key, default)
 
     async def set(
-        self, key: Hashable, value: Any, expire: Optional[int] = None
+        self, key: Hashable, value: Any, expire: int | None = None
     ) -> None:
         self._storage[key] = value
 

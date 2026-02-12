@@ -1,5 +1,5 @@
+from collections.abc import Callable, Sequence
 from enum import Enum
-from typing import Callable, Optional, Sequence, Set, Type
 
 from pybotx import HandlerCollector, IncomingMessageHandlerFunc, Middleware
 
@@ -9,18 +9,18 @@ from pybotx_fsm.templates import COMMAND_NAME_TEMPLATE
 class FSMCollector(HandlerCollector):
     def __init__(
         self,
-        states_cls: Type[Enum],
-        middlewares: Optional[Sequence[Middleware]] = None,
+        states_cls: type[Enum],
+        middlewares: Sequence[Middleware] | None = None,
     ) -> None:
         super().__init__(middlewares=middlewares)
 
         self.states_cls = states_cls
-        self.states: Set[Enum] = set()
+        self.states: set[Enum] = set()
 
     def on(
         self,
         state: Enum,
-        middlewares: Optional[Sequence[Middleware]] = None,
+        middlewares: Sequence[Middleware] | None = None,
     ) -> Callable[[IncomingMessageHandlerFunc], IncomingMessageHandlerFunc]:
         assert isinstance(
             state,

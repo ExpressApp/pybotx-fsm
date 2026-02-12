@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from collections.abc import Callable
 from uuid import UUID, uuid4
 
 import pytest
@@ -11,7 +11,6 @@ from pybotx import (
     UserDevice,
     UserSender,
 )
-from pydantic import AnyHttpUrl
 
 
 @pytest.fixture
@@ -30,12 +29,12 @@ def chat_id() -> UUID:
 
 
 @pytest.fixture
-def host() -> AnyHttpUrl:
-    return AnyHttpUrl(url="https://cts.example.com", scheme="https")
+def host() -> str:
+    return "https://cts.example.com"
 
 
 @pytest.fixture
-def bot_account(host: AnyHttpUrl, bot_id: UUID) -> BotAccountWithSecret:
+def bot_account(host: str, bot_id: UUID) -> BotAccountWithSecret:
     return BotAccountWithSecret(
         id=bot_id,
         cts_url=host,
@@ -53,8 +52,8 @@ def incoming_message_factory(
     def factory(
         *,
         body: str = "",
-        ad_login: Optional[str] = None,
-        ad_domain: Optional[str] = None,
+        ad_login: str | None = None,
+        ad_domain: str | None = None,
     ) -> IncomingMessage:
         return IncomingMessage(
             bot=BotAccount(
