@@ -488,14 +488,14 @@ testing = ["coverage", "pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pybotx"
-version = "0.76.0a2"
+version = "0.76.0"
 description = "A python library for interacting with eXpress BotX API"
 optional = false
 python-versions = "<4.0,>=3.10"
 groups = ["main"]
 files = [
-    {file = "pybotx-0.76.0a2-py3-none-any.whl", hash = "sha256:3967aec76bdddf4d2250143cb3826904b10e57ab67a3968c6504400d96f92b14"},
-    {file = "pybotx-0.76.0a2.tar.gz", hash = "sha256:6d8fa74fe56bc88d5818e31da0cd1e9816e2d71b7df53816056250562371f327"},
+    {file = "pybotx-0.76.0-py3-none-any.whl", hash = "sha256:03734b50a5a59e99b5c2821be4dccf94b95634bf979cd183fe586ffd0367ce7b"},
+    {file = "pybotx-0.76.0.tar.gz", hash = "sha256:b5b2caea1a93097258ecf6aee52e64eb50b231345e6af921c097bca85616d762"},
 ]
 
 [package.dependencies]
@@ -871,4 +871,4 @@ dev = ["black (>=19.3b0) ; python_version >= \"3.6\"", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "5602a6fff1bf2b6210ab297bed99c984aacbc67a684f731b00c7e4918d522bcd"
+content-hash = "00af87f6359bc47124a1b06422940f100397434813533041dbc78f81563e071a"
