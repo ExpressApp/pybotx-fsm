@@ -10,14 +10,14 @@ authors = []
 [tool.poetry.dependencies]
 python = ">=3.10,<4.0"
 
-pybotx = "0.76.0"
+pybotx = ">=0.76.0,<1.0.0"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "1.19.1"
-ruff = "0.15.0"
+mypy = "^1.19.1"
+ruff = "^0.15.0"
 
-pytest = "9.0.2"
-pytest-asyncio = "1.3.0"
+pytest = "^9.0.2"
+pytest-asyncio = "^1.3.0"
 
 [build-system]
 requires = ["poetry-core>=2.1.0"]
