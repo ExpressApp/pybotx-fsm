@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import Callable, Optional
+from collections.abc import Callable
 
 from pybotx import (
     Bot,
@@ -24,7 +24,7 @@ async def test_getting_state(
     collector = HandlerCollector()
     fsm = FSMCollector(EnumForTests)
 
-    state: Optional[EnumForTests] = None
+    state: EnumForTests | None = None
 
     @fsm.on(EnumForTests.TEST_STATE)
     async def process_test_state(message: IncomingMessage, _: Bot) -> None:

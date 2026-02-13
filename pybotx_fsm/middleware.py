@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from collections.abc import Sequence
 
 from pybotx import Bot, HandlerCollector, IncomingMessage, IncomingMessageHandlerFunc
 
@@ -32,7 +32,7 @@ class FSMMiddleware:
 
         message.state.fsm = FSM(state_repo, message)
 
-        fsm_state_data: Optional[FSMStateData] = await state_repo.get(
+        fsm_state_data: FSMStateData | None = await state_repo.get(
             KEY_TEMPLATE.format(
                 host=message.bot.host,
                 bot_id=message.bot.id,
@@ -63,6 +63,5 @@ class FSMMiddleware:
             needed_states = set(collector.states_cls.__members__.values())
             unfilled_states = needed_states - collector.states
             assert unfilled_states == set(), (
-                f"States {unfilled_states} have no "
-                "FSMCollector.on decorated handlers"
+                f"States {unfilled_states} have no FSMCollector.on decorated handlers"
             )

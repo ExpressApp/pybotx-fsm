@@ -9,9 +9,8 @@ mkdir "${snippets_dir_path}"
 
 python scripts/collect_snippets.py
 
-isort --profile black --check-only "${snippets_dir_path}"
-black --check --diff "${snippets_dir_path}"
+ruff format --check "${snippets_dir_path}"
+ruff check "${snippets_dir_path}"
 mypy --disable-error-code empty-body "${snippets_dir_path}"
-flake8 "${snippets_dir_path}"
 
 rm -rf "${snippets_dir_path}"

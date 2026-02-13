@@ -2,27 +2,33 @@
 
 [tool.poetry]
 name = "pybotx-fsm"
-version = "0.6.1"
+version = "0.7.0"
 description = "FSM middleware for using with pybotx"
 readme = "README.md"
 authors = []
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.14"
+python = ">=3.10,<4.0"
 
-pybotx = ">=0.75.0"
+pybotx = "0.76.0"
 
-[tool.poetry.dev-dependencies]
-add-trailing-comma = "3.1.0"
-autoflake = "2.3.1"
-black = "25.1.0"
-isort = "6.0.1"
-mypy = "1.15.0"
-wemake-python-styleguide = "0.19.2"
+[tool.poetry.group.dev.dependencies]
+mypy = "1.19.1"
+ruff = "0.15.0"
 
-pytest = "8.3.5"
-pytest-asyncio = "0.26.0"
+pytest = "9.0.2"
+pytest-asyncio = "1.3.0"
 
 [build-system]
-requires = ["poetry>=1.2.0"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=2.1.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+".snippets/*.py" = ["F401"]

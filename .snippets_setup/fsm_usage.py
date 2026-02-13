@@ -1,5 +1,6 @@
 from collections import namedtuple
 from enum import Enum, auto
+from typing import Any, cast
 from uuid import UUID
 
 from pybotx import Bot, BotAccountWithSecret, HandlerCollector
@@ -17,4 +18,3 @@ class LoginStates(Enum):
 Module = namedtuple("Module", ("fsm", "collector"))
 
 myfile = Module(FSMCollector(LoginStates), HandlerCollector())
-

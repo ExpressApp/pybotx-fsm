@@ -1,6 +1,6 @@
 from enum import Enum, auto
-from typing import Callable
-from unittest.mock import Mock
+from collections.abc import Callable
+from unittest.mock import AsyncMock, Mock
 
 from pybotx import (
     Bot,
@@ -11,6 +11,7 @@ from pybotx import (
 )
 
 from pybotx_fsm import FSMCollector, FSMMiddleware
+from pybotx_fsm.fsm import FSM
 from tests.state_repo import StateRepo
 
 
@@ -71,3 +72,27 @@ async def test_changing_state_on_successful(
     assert first_handler_trigger.called
     assert second_handler_trigger.called
     assert default_handler_trigger.called
+
+
+async def test_changing_state_with_ttl(
+    incoming_message_factory: Callable[..., IncomingMessage],
+) -> None:
+    class EnumForTests(Enum):
+        TEST_STATE = auto()
+
+    state_repo = AsyncMock()
+    message = incoming_message_factory(body="text")
+    fsm = FSM(state_repo=state_repo, message=message)
+
+    await fsm.change_state(
+        EnumForTests.TEST_STATE,
+        ttl_seconds=300,
+        payload="value",
+    )
+
+    assert state_repo.set.await_count == 1
+
+    state_data = state_repo.set.await_args.args[1]
+    assert state_data.state == EnumForTests.TEST_STATE
+    assert state_data.storage.payload == "value"
+    assert state_repo.set.await_args.kwargs["expire"] == 300
