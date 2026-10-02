@@ -13,7 +13,7 @@ python = ">=3.10,<4.0"
 pybotx = ">=0.76.0,<1.0.0"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.19.1"
+mypy = "^2.0.0"
 ruff = "^0.15.0"
 
 pytest = "^9.0.2"
